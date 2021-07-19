@@ -20,9 +20,13 @@
         <label for="validationCustom04">Date de naissance:</label>
         <input type="date" id="validationCustom04" name="" required>
       </div>
+      <div class="col-md-12">
+        <label for="validationCustom05">Numéro de téléphone:</label>
+        <input type="tel" id="validationCustom05" name="" required>
+      </div>
       
     <div class="col-md-12">
-    <label for="validationCustom05" class="form-label">Choisir son afiliation politique</label>
+    <label for="validationCustom06" class="form-label">Choisir son afiliation politique</label>
     <select class="form-select" aria-label="Default select example">   
         <option selected>Ouvrez le menu</option>
         <option value="1">PCF</option>
@@ -34,8 +38,8 @@
       </select>
     </div>
     <div class="col-md-12">
-        <label for="validationCustom06" class="form-label">Mot de passe :</label>
-        <input type="password" class="form-control" id="validationCustom06" value="" required>
+        <label for="validationCustom07" class="form-label">Mot de passe :</label>
+        <input type="password" class="form-control" id="validationCustom07" value="" required>
       </div>
     <div class="col-12">
       <button class="btn btn-primary" type="submit">Envoyer</button>
