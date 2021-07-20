@@ -21,16 +21,25 @@
               <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="/">Home</a>
               </li>
-              <li class="nav-item">
+              <li class="nav-item text-right">
                 <a class="nav-link" href="/register">S'inscrire</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="/login">Se connecter</a>
               </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ route('logout') }}">Déconnection</a>
+              </li>
             </ul>
           </div>
         </div>
       </nav>
+
+      @if (session("success"))
+        <div class="alert alert-success text-center" role="alert">
+            {{ session("success") }}
+        </div>
+    @endif
 
       
     @yield('content')

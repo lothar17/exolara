@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Vouter extends Model
 {
     use HasFactory;
+
+    protected $vouter = ["prenom", "nom", "age", "email", "tel",];
+
+    protected $guarded = [];
 }

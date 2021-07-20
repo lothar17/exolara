@@ -3,16 +3,17 @@
 @section('content')
 
 <div class="container">
-<form class="row g-3 needs-validation" novalidate>
-    
+  <h2 class="text-center">Connection</h2>
+<form class="row g-3 needs-validation" method="POST" action="{{ route('user.login') }}">
+    @csrf
     <div class="col-md-12">
-        <label for="validationCustom03" class="form-label">Email :</label>
-        <input type="email" class="form-control" id="validationCustom02" value="" required>
+        <label for="email" class="form-label">Email :</label>
+        <input type="email" name="email" class="form-control" id="email" value="" required>
       </div>
       
     <div class="col-md-12">
-        <label for="validationCustom06" class="form-label">Mot de passe :</label>
-        <input type="password" class="form-control" id="validationCustom06" value="" required>
+        <label for="password" class="form-label">Mot de passe :</label>
+        <input type="password" name="password" class="form-control" id="password" value="" required>
       </div>
     <div class="col-12">
       <button class="btn btn-primary" type="submit">Envoyer</button>
