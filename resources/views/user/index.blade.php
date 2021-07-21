@@ -1,23 +1,22 @@
 @extends('welcome')
 
-@section('content')
-    <h1 class="text-center text-danger">Liste des contacts</h1>
-
-    @if (session("success"))
-        <div class="alert alert-success" role="alert">
-            {{ session("success") }}
-        </div>
-    @endif
-
-    @php
+@php
         $vouter = session()->get('vouter');
               
     @endphp
 
+    @section('content')
+    <div class="my-5">
+        <h1 class="text-center text-primary">Bienvenue  <u>{{ $vouter->first_name }}</u></h1>
 
-    <div class="d-flex justify-content-center">
-        <a href="" class="btn btn-primary my-3">Ajouter contact</a>
+        @if (session("success"))
+            <div class="alert alert-success" role="alert">
+                {{ session("success") }}
+            </div>
+        @endif
     </div>
+    
+
 
     @if($vouter)
     <div class="table-responsive">
@@ -46,9 +45,8 @@
                     <td>{{ $vouter->created_at }}</td>
                     <td>{{ $vouter->updated_at }}</td>
                     <td>
-                        <a href="" class="btn btn-secondary">Modifier</a>
-                        <form action="" method ="POST" class="d-inline" onclick="return confirm('Confirmer la suppression ?')"
-                            >
+                        <a href="{{ route('user.edit', $vouter->id) }}" class="btn btn-secondary">Modifier</a>
+                        <form action="{{ route('user.delete', $vouter->id) }}" method ="POST" class="d-inline" onclick="return confirm('Confirmer la suppression ?')">
                             @csrf
                             @method('delete')
                             <input type="submit" class="btn btn-danger" value="Supprimer">

@@ -12,4 +12,12 @@ class Vouter extends Model
     protected $vouter = ["prenom", "nom", "age", "email", "tel",];
 
     protected $guarded = [];
+
+    protected $hidden = [
+        'password',
+        
+    ];
+    
 }
+
+

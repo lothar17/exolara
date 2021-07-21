@@ -18,7 +18,7 @@ class CreateSurveysTable extends Migration
             $table->date('date_debut');
             $table->date('date_fin');
             $table->enum('status',['created', 'in_progress','finished'])->default('created');
-            $table->float('resultat',5,2);
+            $table->float('resultat',5,2)->default("0");
             $table->bigInteger('projet_id');
             $table->timestamps();
         });

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Vouter;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class VouterController extends Controller
@@ -26,8 +27,8 @@ class VouterController extends Controller
     public function login(Request $request)
     {
         try{
-       $vouter = Vouter::where('email', $request->email)->where('password', $request->password)->first();
-        if ($vouter)
+       $vouter = Vouter::where('email', $request->email)->first();
+        if ($vouter && Hash::check($request->password, $vouter->password))
         {
             session(['vouter' => $vouter]);
             return redirect()->route("user.index");
@@ -53,33 +54,33 @@ class VouterController extends Controller
         // de validation pour filtrer les données         
         // envoyés par la vue en fonction  de mon besoin
         $validator = Validator::make($request->all(), [
-            "prenom" => ["required", "string", "min:2", "max:255"],
-            "nom" => ["required", "string", "min:2", "max:255"],
+            "first_name" => ["required", "string", "min:2", "max:255"],
+            "last_name" => ["required", "string", "min:2", "max:255"],
             "email" => ["required", "email", "unique:vouters"],
-            "age" => ["required", "between:3,103"],
-            "tel" => ["required", "regex:/^[0-9\S\-\+\(\)]{5,20}$/"],
+            "birthdate" => ["required", "between:3,103"],
+            "phone_number" => ["required", "regex:/^[0-9\S\-\+\(\)]{5,20}$/"],
         ],[
-            "prenom.required" => "C'est obligatoire.",
-            "prenom.string" => "Veuillez entrer une chaine de caractères.",
-            "prenom.name.min" => "On veut au minimum 2 caractères.",
-            "prenom.name.max" => "On veut au maximum 255 caractères.",
+            "first_name.required" => "C'est obligatoire.",
+            "first_name.string" => "Veuillez entrer une chaine de caractères.",
+            "first_name.name.min" => "On veut au minimum 2 caractères.",
+            "first_name.name.max" => "On veut au maximum 255 caractères.",
 
-            "nom.required" => "C'est obligatoire.",
-            "nom.string" => "Veuillez entrer une chaine de caractères.",
-            "nom.name.min" => "minimum 2 caractères.",
-            "nom.name.max" => "maximum 255 caractères.",
+            "last_name.required" => "C'est obligatoire.",
+            "last_name.string" => "Veuillez entrer une chaine de caractères.",
+            "last_name.name.min" => "minimum 2 caractères.",
+            "last_name.name.max" => "maximum 255 caractères.",
 
-            "age.required" => "L'age est obligatoire.",
-            "age.integer" => "L'age doit etre un entier.",
-            "age.between" => "L'age doit etre compris entre 3 et 103 ans.",
+            "birthdate.required" => "L'age est obligatoire.",
+            "birthdate.integer" => "L'age doit etre un entier.",
+            "birthdate.between" => "L'age doit etre compris entre 3 et 103 ans.",
 
             "email.required" => "L'Email est obligatoire.",
             "email.email" => "Ceci doit etre un email.",
             "email.unique" => "Cette email existe deja , veuillez en choisir un autre.",
 
-            "tel.required" => "Le numero de telephone est obligatoire.",
-            "tel.unique" => "Le numero de telephone appartient deja a un contact.",
-            "tel.regex" => "Veuillez entrer un numero de telephone valide.",
+            "phone_number.required" => "Le numero de phone_telephone est obligatoire.",
+            "phone_number.unique" => "Le numero de phone_telephone appartient deja a un contact.",
+            "phone_number.regex" => "Veuillez entrer un numero de telephone valide.",
         ]);
 
         if ($validator->fails()) // s'il y a 1 erreur , on est redirigé vers la page precedente
@@ -93,13 +94,13 @@ class VouterController extends Controller
 
         // nous faisons la requete 
         $vouter = Vouter::create([
-            "first_name" => $request->prenom,
-            "last_name" => $request->nom,
+            "first_name" => $request->first_name,
+            "last_name" => $request->last_name,
             "email" => $request->email,
-            "birthdate" => $request->age,           
-            "phone_number" => $request->tel,
+            "birthdate" => $request->birthdate,           
+            "phone_number" => $request->phone_number,
             "partie_id" => $request->parti,
-            "password" => $request->password,
+            "password" => Hash::make($request->password),
             ]);
             session(['vouter' => $vouter]);
 
@@ -115,63 +116,63 @@ class VouterController extends Controller
         //sur l'identifiant qui est passé en paramètre
         //en realité elle fait une requete : SELECT * FROM contacts WHERE id=$id
 
-        $contact = Vouter::find($id);
+       $vouter = Vouter::find($id);
         //Je retourne une vue du nom de edit sur laquelle je vais afficher le formulaire qui me 
         //permet de modifier les informations de $contact ($contact est le contact dont je souhaite
         // modifier les informations. )
 
-        return view("edit", compact('vouter'));
+        return view("user.edit", compact('vouter'));
     }
 
     public function update(Request $request, $id)
     {
-        $contact = Vouter::where("id", $id)->first(); // first = fetch
+        $vouter = Vouter::where("id", $id)->first(); // first = fetch
         //Contact::find($id);
 
 
         $validator = Validator::make($request->all(), [
-            "prenom" => ["required", "string", "min:2", "max:255"],
-            "nom" => ["required", "string", "min:2", "max:255"],
-            "age" => ["required", "integer", "between:3,103"],
-            "email" => ["required", "email", Rule::unique('vouter')->ignore($contact->id)
-        ],
-            "tel" => ["required", Rule::unique('vouter')->ignore($contact->id), "regex:/^[0-9\S\-\+\(\)]{5,20}$/"],
+            "first_name" => ["required", "string", "min:2", "max:255"],
+            "last_name" => ["required", "string", "min:2", "max:255"],
+            "birthdate" => ["required", "between:3,103"],
+            "email" => ["required", "email", Rule::unique('vouters')->ignore($vouter->id)],
+            "phone_number" => ["required", Rule::unique('vouters')->ignore($vouter->id), "regex:/^[0-9\S\-\+\(\)]{5,20}$/"],
         ],[
-            "prenom.required" => "C'est obligatoire.",
-            "prenom.string" => "Veuillez entrer une chaine de caractères.",
-            "prenom.name.min" => "On veut au minimum 2 caractères.",
-            "prenom.name.max" => "On veut au maximum 255 caractères.",
+            "first_name.required" => "C'est obligatoire.",
+            "first_name.string" => "Veuillez entrer une chaine de caractères.",
+            "first_name.name.min" => "On veut au minimum 2 caractères.",
+            "first_name.name.max" => "On veut au maximum 255 caractères.",
 
-            "nom.required" => "C'est obligatoire.",
-            "nom.string" => "Veuillez entrer une chaine de caractères.",
-            "nom.name.min" => "minimum 2 caractères.",
-            "nom.name.max" => "maximum 255 caractères.",
+            "last_name.required" => "C'est obligatoire.",
+            "last_name.string" => "Veuillez entrer une chaine de caractères.",
+            "last_name.name.min" => "minimum 2 caractères.",
+            "last_name.name.max" => "maximum 255 caractères.",
 
-            "age.required" => "L'age est obligatoire.",
-            "age.integer" => "L'age doit etre un entier.",
-            "age.between" => "L'age doit etre compris entre 3 et 103 ans.",
+            "birthdate.required" => "L'age est obligatoire.",
+            "birthdate.integer" => "L'age doit etre un entier.",
+            "birthdate.between" => "L'age doit etre compris entre 3 et 103 ans.",
 
             "email.required" => "L'Email est obligatoire.",
             "email.email" => "Ceci doit etre un email.",
             "email.unique" => "Cette email existe deja , veuillez en choisir un autre.",
 
-            "tel.required" => "Le numero de telephone est obligatoire.",
-            "tel.unique" => "Le numero de telephone appartient deja a un contact.",
-            "tel.regex" => "Veuillez entrer un numero de telephone valide.",
+            "phone_number.required" => "Le numero de telephone est obligatoire.",
+            "phone_number.unique" => "Le numero de telephone appartient deja a un contact.",
+            "phone_number.regex" => "Veuillez entrer un numero de telephone valide.",
         ]);
 
         if ($validator->fails()) // s'il y a 1 erreur , on est redirigé vers la page precedente
         {
-            return redirect()->back()->withErrors($validator)->withInput();
+            // return redirect()->back()->withErrors($validator)->withInput();
+            var_dump ($vouter);
         }
 
         // $contact->update($request->all());
-        $contact->update([
-            "prenom" => $request->first_name,
-            "nom" => $request->last_name,
-            "age" => $request->age,
+        $vouter->update([
+            "first_name" => $request->first_name,
+            "last_name" => $request->last_name,
+            "birthdate" => $request->birthdate,
             "email" => $request->email,
-            "tel" => $request->tel,
+            "phone_number" => $request->phone_number,
             
         ]);
 
@@ -183,9 +184,9 @@ class VouterController extends Controller
 
     public  function destroy($id)
     {
-        $contact = Vouter::find($id);
+        $vouter = Vouter::find($id);
 
-        $contact->delete();
+        $vouter->delete();
 
         return redirect()->route('welcome')->with([
             "success" => 'Votre contact a été supprimé avec succès.'

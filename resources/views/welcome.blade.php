@@ -21,6 +21,12 @@
               <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="/">Home</a>
               </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/projets/index">Projets</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/survey/index">Sondages</a>
+              </li>
               <li class="nav-item text-right">
                 <a class="nav-link" href="/register">S'inscrire</a>
               </li>
